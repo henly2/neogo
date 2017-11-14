@@ -7,8 +7,6 @@ import (
 
 	"github.com/dynamicgo/config"
 	"github.com/stretchr/testify/assert"
-
-	cryptox "github.com/inwecrypto/cryptox/neo"
 )
 
 var cnf *config.Config
@@ -74,9 +72,9 @@ func TestBlockCount(t *testing.T) {
 }
 
 func TestBlockByIndex(t *testing.T) {
-	client := NewClient(cnf.GetString("mainnode", "xxxxx"))
+	client := NewClient(cnf.GetString("testnode", "xxxxx"))
 
-	block, err := client.GetBlockByIndex(3)
+	block, err := client.GetBlockByIndex(4353)
 
 	assert.NoError(t, err)
 
@@ -88,7 +86,7 @@ func TestBlockByIndex(t *testing.T) {
 func TestGetRawTransaction(t *testing.T) {
 	client := NewClient(cnf.GetString("mainnode", "xxxxx"))
 
-	block, err := client.GetRawTransaction("83a24cf2acaf207eb436590a7aaaefa03ae9b7d629e20d93a3d7edb8f0458eb6")
+	block, err := client.GetRawTransaction("0xbdecbb623eee6f9ade28d5a8ff5fb3ea9c9d73af039e0286201b3b0291fb4d4a")
 
 	assert.NoError(t, err)
 
@@ -119,21 +117,6 @@ func TestGetPeers(t *testing.T) {
 	blockjson, _ := json.MarshalIndent(block, "", "\t")
 
 	fmt.Printf("peers:\n\t%s\n", string(blockjson))
-}
-
-func TestSendRawTransaction(t *testing.T) {
-
-	wallet, err := cryptox.KeyFromWIF("L4Ns4Uh4WegsHxgDG49hohAYxuhj41hhxG6owjjTWg95GSrRRbLL")
-
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	assert.Equal(t, wallet.Address, "AMpupnF6QweQXLfCtF4dR45FDdKbTXkLsr")
-
-	client := NewClient(cnf.GetString("testnode", "xxxxx"))
-
-	client.GetAccountState("AMpupnF6QweQXLfCtF4dR45FDdKbTXkLsr")
 }
 
 func printResult(result interface{}) {
