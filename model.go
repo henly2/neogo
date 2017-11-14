@@ -138,6 +138,7 @@ func (a utxoByValue) Len() int {
 func (a utxoByValue) Swap(i, j int) {
 	a[i], a[j] = a[j], a[i]
 }
+
 func (a utxoByValue) Less(i, j int) bool {
 
 	vali, _ := a[1].Value()
