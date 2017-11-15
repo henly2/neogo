@@ -105,6 +105,8 @@ type Transaction struct {
 type UTXO struct {
 	TransactionID string `json:"txid"`
 	Vout          Vout   `json:"vout"`
+	CreateTime    string `json:"createTime"`
+	SpentTime     string `json:"spentTime"`
 	value         *float64
 }
 

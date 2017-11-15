@@ -26,9 +26,9 @@ func TestRPCAccountSate(t *testing.T) {
 }
 
 func TestGetBalance(t *testing.T) {
-	client := NewClient(cnf.GetString("testnode", "xxxxx"))
+	client := NewClient(cnf.GetString("testnodeext", "xxxxx"))
 
-	balance, err := client.GetBalance("0xc56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b")
+	balance, err := client.GetBalance("AJnNUn6HynVcco1p8LER72s4zXtNFYDnys")
 
 	assert.NoError(t, err)
 
@@ -74,7 +74,7 @@ func TestBlockCount(t *testing.T) {
 func TestBlockByIndex(t *testing.T) {
 	client := NewClient(cnf.GetString("testnode", "xxxxx"))
 
-	block, err := client.GetBlockByIndex(4353)
+	block, err := client.GetBlockByIndex(780505)
 
 	assert.NoError(t, err)
 
