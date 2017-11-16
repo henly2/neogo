@@ -74,7 +74,7 @@ func TestBlockCount(t *testing.T) {
 func TestBlockByIndex(t *testing.T) {
 	client := NewClient(cnf.GetString("testnode", "xxxxx"))
 
-	block, err := client.GetBlockByIndex(780505)
+	block, err := client.GetBlockByIndex(4356)
 
 	assert.NoError(t, err)
 
