@@ -38,7 +38,7 @@ func TestGetBalance(t *testing.T) {
 func TestGetClaim(t *testing.T) {
 	client := NewClient(cnf.GetString("testnodeext", "xxxxx"))
 
-	balance, err := client.GetClaim("AMpupnF6QweQXLfCtF4dR45FDdKbTXkLsr")
+	balance, err := client.GetClaim("AQHwN3Haiu9KK8jKxudV54pgTBxUTugSXv")
 
 	assert.NoError(t, err)
 
