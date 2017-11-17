@@ -28,7 +28,17 @@ func TestRPCAccountSate(t *testing.T) {
 func TestGetBalance(t *testing.T) {
 	client := NewClient(cnf.GetString("testnodeext", "xxxxx"))
 
-	balance, err := client.GetBalance("AJnNUn6HynVcco1p8LER72s4zXtNFYDnys")
+	balance, err := client.GetBalance("AJnNUn6HynVcco1p8LER72s4zXtNFYDnys", "c56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b")
+
+	assert.NoError(t, err)
+
+	printResult(balance)
+}
+
+func TestGetClaim(t *testing.T) {
+	client := NewClient(cnf.GetString("testnodeext", "xxxxx"))
+
+	balance, err := client.GetClaim("AMpupnF6QweQXLfCtF4dR45FDdKbTXkLsr")
 
 	assert.NoError(t, err)
 
@@ -86,7 +96,7 @@ func TestBlockByIndex(t *testing.T) {
 func TestGetRawTransaction(t *testing.T) {
 	client := NewClient(cnf.GetString("mainnode", "xxxxx"))
 
-	block, err := client.GetRawTransaction("0xbdecbb623eee6f9ade28d5a8ff5fb3ea9c9d73af039e0286201b3b0291fb4d4a")
+	block, err := client.GetRawTransaction("fafd00170b22480f46ee4506c0ddc97c02eeb23729c611d27329a78aa250a1e7")
 
 	assert.NoError(t, err)
 
