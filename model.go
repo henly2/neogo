@@ -184,7 +184,7 @@ type BlockFee struct {
 
 // Unclaimed .
 type Unclaimed struct {
-	Unavailable float64
-	Available   float64
+	Unavailable string
+	Available   string
 	Claims      []*UTXO
 }

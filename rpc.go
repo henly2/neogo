@@ -2,6 +2,7 @@ package neogo
 
 import (
 	"bytes"
+	"encoding/hex"
 	"fmt"
 	"reflect"
 
@@ -125,7 +126,7 @@ func (client *Client) GetPeers() (data interface{}, err error) {
 
 // SendRawTransaction send raw transaction with jsonrpc api:http://docs.neo.org/zh-cn/node/api/sendrawtransaction.html
 func (client *Client) SendRawTransaction(data []byte) (status bool, err error) {
-	err = client.call("sendrawtransaction", &status, data)
+	err = client.call("sendrawtransaction", &status, hex.EncodeToString(data))
 
 	return
 }
