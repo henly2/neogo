@@ -13,7 +13,7 @@ import (
 var cnf *config.Config
 
 func init() {
-	cnf, _ = config.NewFromFile("./test.json")
+	cnf, _ = config.NewFromFile("../conf/test.json")
 }
 
 func TestRPCAccountSate(t *testing.T) {
@@ -83,9 +83,9 @@ func TestBlockCount(t *testing.T) {
 }
 
 func TestBlockByIndex(t *testing.T) {
-	client := NewClient(cnf.GetString("testnode", "xxxxx"))
+	client := NewClient(cnf.GetString("neo", "xxxxx"))
 
-	block, err := client.GetBlockByIndex(4354)
+	block, err := client.GetBlockByIndex(0)
 
 	assert.NoError(t, err)
 
@@ -95,9 +95,9 @@ func TestBlockByIndex(t *testing.T) {
 }
 
 func TestGetRawTransaction(t *testing.T) {
-	client := NewClient(cnf.GetString("mainnode", "xxxxx"))
+	client := NewClient(cnf.GetString("neo", "xxxxx"))
 
-	block, err := client.GetRawTransaction("fafd00170b22480f46ee4506c0ddc97c02eeb23729c611d27329a78aa250a1e7")
+	block, err := client.GetRawTransaction("0x15e7c13851d28b4a049082dedba368f8772d6d829c77b9948019b3232a7c356d")
 
 	assert.NoError(t, err)
 
@@ -107,9 +107,9 @@ func TestGetRawTransaction(t *testing.T) {
 }
 
 func TestGetTxOut(t *testing.T) {
-	client := NewClient(cnf.GetString("mainnode", "xxxxx"))
+	client := NewClient(cnf.GetString("neo", "xxxxx"))
 
-	block, err := client.GetTxOut("0x0ae13c1ba01d30a8238a0ec89019171fcf9eee61802dd468cc797a02ac48798d", 0)
+	block, err := client.GetTxOut("15e7c13851d28b4a049082dedba368f8772d6d829c77b9948019b3232a7c356d", 0)
 
 	assert.NoError(t, err)
 
