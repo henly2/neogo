@@ -16,6 +16,7 @@ type Value struct {
 type Nep5Result struct {
 	State       string   `json:"state"`
 	GasConsumed string   `json:"gas_consumed"`
+	Script      string   `json:"script"`
 	Stack       []*Value `json:"stack"`
 }
 
