@@ -214,3 +214,41 @@ func (client *Client) Nep5BalanceOf(scriptHash string, address string) (uint64, 
 
 	return strconv.ParseUint(result.Stack[0].Value, 16, 64)
 }
+
+// Nep5Transfer .
+func (client *Client) Nep5Transfer(scriptHash string, from, to, amount string) (interface{}, error) {
+	var result Nep5Result
+
+	fromValue := []*Value{
+		&Value{
+			Type:  "Hash160",
+			Value: from,
+		},
+	}
+
+	toValue := []*Value{
+		&Value{
+			Type:  "Hash160",
+			Value: to,
+		},
+	}
+
+	amountValue := []*Value{
+		&Value{
+			Type:  "Integer",
+			Value: amount,
+		},
+	}
+
+	err := client.call("invokefunction", &result, scriptHash, "transfer", fromValue, toValue, amountValue)
+
+	if err != nil {
+		return 0, err
+	}
+
+	if len(result.Stack) == 0 {
+		return 0, fmt.Errorf("unexpect result :%v", result)
+	}
+
+	return result, nil
+}

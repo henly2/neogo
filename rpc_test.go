@@ -73,7 +73,7 @@ func TestBestBlockHash(t *testing.T) {
 }
 
 func TestBlockCount(t *testing.T) {
-	client := NewClient(cnf.GetString("testnode", "xxxxx"))
+	client := NewClient(cnf.GetString("mainnode", "xxxxx"))
 
 	count, err := client.GetBlockCount()
 
@@ -97,7 +97,7 @@ func TestBlockByIndex(t *testing.T) {
 func TestGetRawTransaction(t *testing.T) {
 	client := NewClient(cnf.GetString("neo", "xxxxx"))
 
-	block, err := client.GetRawTransaction("0x15e7c13851d28b4a049082dedba368f8772d6d829c77b9948019b3232a7c356d")
+	block, err := client.GetRawTransaction("0x4e36c4c5f4b02d909fab285f6d5f7242e44dcbd26caee5ce21dd7ec5863146ca")
 
 	assert.NoError(t, err)
 

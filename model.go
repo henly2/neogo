@@ -112,6 +112,8 @@ type Transaction struct {
 	Type       string        `json:"Type"`
 	Version    int64         `json:"Version"`
 	Attributes []interface{} `json:"Attributes"` //
+	Script     interface{}   `json:"Script"`
+	Gas        string        `json:"Gas"`
 	Claims     []Claim       `json:"Claims"`
 	Vin        []Vin         `json:"Vin"`
 	Vout       []Vout        `json:"Vout"`
