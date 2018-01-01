@@ -314,7 +314,7 @@ func (tx *Transaction) CalcInputs(outputs []*Vout, unspent []*neogo.UTXO) ([]*Vi
 
 		if selectedAmount > amount {
 			tx.Outputs = append(tx.Outputs, &Vout{
-				Asset:   vout.Address,
+				Asset:   vout.Asset,
 				Value:   MakeFixed8(selectedAmount - amount),
 				Address: selected[0].Vout.Address,
 			})
@@ -609,6 +609,7 @@ func (vout *Vout) Write(writer io.Writer) error {
 	data, err := hex.DecodeString(strings.TrimPrefix(vout.Asset, "0x"))
 
 	if err != nil {
+		println("write err :", vout.Asset, vout.Value)
 		return err
 	}
 

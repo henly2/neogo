@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/big"
+	"strconv"
 	"testing"
 
 	"github.com/dynamicgo/config"
@@ -262,6 +263,48 @@ func TestUnmarshalTx(t *testing.T) {
 	println(tx.Tx().String())
 }
 
+func TestTransferNEO(t *testing.T) {
+	to, err := keystore.KeyFromWIF(conf.GetString("wallet", "xxxxx"))
+
+	assert.NoError(t, err)
+
+	from, err := keystore.KeyFromWIF(conf.GetString("wallet2", "xxxxx"))
+
+	assert.NoError(t, err)
+
+	tx := NewContractTx()
+
+	vout := []*Vout{
+		&Vout{
+			Asset:   NEOAssert,
+			Value:   MakeFixed8(1),
+			Address: to.Address,
+		},
+	}
+
+	asset, err := getAsset(from.Address, NEOAssert)
+
+	assert.NoError(t, err)
+
+	err = tx.CalcInputs(vout, asset)
+
+	assert.NoError(t, err)
+
+	rawtx, _, err := tx.Tx().Sign(from.PrivateKey)
+
+	assert.NoError(t, err)
+
+	println(tx.Tx().String())
+
+	client := neogo.NewClient(conf.GetString("neotest", "xxxxx"))
+
+	status, err := client.SendRawTransaction(rawtx)
+
+	assert.NoError(t, err)
+
+	println(status)
+}
+
 func TestGetClaim(t *testing.T) {
 
 	client := neogo.NewClient(conf.GetString("neotest", "xxxxx") + "/extend")
@@ -275,6 +318,31 @@ func TestGetClaim(t *testing.T) {
 	assert.NoError(t, err)
 
 	printResult(claims)
+
+	val, err := strconv.ParseFloat(claims.Available, 64)
+
+	assert.NoError(t, err)
+
+	tx := NewClaimTx()
+
+	err = tx.Claim(val, key.Address, claims.Claims)
+
+	assert.NoError(t, err)
+
+	rawtx, _, err := tx.Tx().Sign(key.PrivateKey)
+
+	assert.NoError(t, err)
+
+	println(tx.Tx().String())
+
+	client = neogo.NewClient(conf.GetString("neotest", "xxxxx"))
+
+	status, err := client.SendRawTransaction(rawtx)
+
+	assert.NoError(t, err)
+
+	println(status)
+
 }
 
 func printResult(result interface{}) {

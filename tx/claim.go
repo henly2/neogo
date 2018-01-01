@@ -36,36 +36,36 @@ func (tx *ClaimTx) Tx() *Transaction {
 }
 
 // Claim .
-func (tx *ClaimTx) Claim(outputs []*Vout, unspent []*neogo.UTXO) error {
+func (tx *ClaimTx) Claim(amount float64, to string, claims []*neogo.UTXO) error {
 
-	gasOutputs := make([]*Vout, 0)
-	otherOutputs := make([]*Vout, 0)
+	var inputs []*Vin
 
-	for _, vout := range outputs {
-		if vout.Asset == GasAssert {
-			gasOutputs = append(gasOutputs, vout)
-		} else {
-			otherOutputs = append(otherOutputs, vout)
+	for _, utxo := range claims {
+		if utxo.Vout.Asset != NEOAssert {
+			continue
 		}
+
+		inputs = append(inputs, &Vin{
+			Tx: utxo.TransactionID,
+			N:  uint16(utxo.Vout.N),
+		})
 	}
 
-	gasInputs, unselected, err := (*Transaction)(tx).CalcInputs(gasOutputs, unspent)
-
-	if err != nil {
-		return err
+	if len(inputs) == 0 {
+		return ErrNoUTXO
 	}
 
 	tx.Extend = &claimTx{
-		inputs: gasInputs,
+		inputs: inputs,
 	}
 
-	otherInputs, _, err := (*Transaction)(tx).CalcInputs(otherOutputs, unselected)
-
-	if err != nil {
-		return err
+	tx.Outputs = []*Vout{
+		&Vout{
+			Asset:   GasAssert,
+			Value:   MakeFixed8(amount),
+			Address: to,
+		},
 	}
-
-	tx.Inputs = otherInputs
 
 	return nil
 }
