@@ -210,11 +210,11 @@ func TestTransfer(t *testing.T) {
 
 	assert.NoError(t, err)
 
-	println(result.Script, result.GasConsumed)
-
 	scriptHash, _ := hex.DecodeString("849d095d07950b9e56d0c895ec48ec5100cfdff1")
 
 	scriptHash = reverseBytes(scriptHash)
+
+	println(result.Script, result.GasConsumed, hex.EncodeToString(scriptHash))
 
 	bytesOfFrom, _ := hex.DecodeString(from)
 
