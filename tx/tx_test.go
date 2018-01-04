@@ -204,9 +204,15 @@ func TestTransfer(t *testing.T) {
 
 	assert.NoError(t, err)
 
+	key2, err := keystore.KeyFromWIF(conf.GetString("wallet2", "xxxxx"))
+
+	assert.NoError(t, err)
+
 	from := ToInvocationAddress(key.Address)
 
-	result, err := client.Nep5Transfer("849d095d07950b9e56d0c895ec48ec5100cfdff1", from, from, 1)
+	to := ToInvocationAddress(key2.Address)
+
+	result, err := client.Nep5Transfer("849d095d07950b9e56d0c895ec48ec5100cfdff1", from, to, 100000000)
 
 	assert.NoError(t, err)
 
@@ -220,7 +226,11 @@ func TestTransfer(t *testing.T) {
 
 	bytesOfFrom = reverseBytes(bytesOfFrom)
 
-	script, err := nep5.Transfer(scriptHash, bytesOfFrom, bytesOfFrom, big.NewInt(1))
+	bytesOfTo, _ := hex.DecodeString(to)
+
+	bytesOfTo = reverseBytes(bytesOfTo)
+
+	script, err := nep5.Transfer(scriptHash, bytesOfFrom, bytesOfTo, big.NewInt(100000000))
 
 	assert.Equal(t, result.Script, hex.EncodeToString(script))
 
