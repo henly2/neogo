@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"math/big"
 	"reflect"
 	"strconv"
 
@@ -212,7 +213,17 @@ func (client *Client) Nep5BalanceOf(scriptHash string, address string) (uint64, 
 		return 0, fmt.Errorf("unexpect result :%v", result)
 	}
 
-	return strconv.ParseUint(result.Stack[0].Value, 16, 64)
+	data, err := hex.DecodeString(result.Stack[0].Value)
+
+	if err != nil {
+		return 0, err
+	}
+
+	data = reverseBytes(data)
+
+	val := big.NewInt(0)
+
+	return val.SetBytes(data).Uint64(), nil
 }
 
 // Nep5Transfer .

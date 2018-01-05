@@ -108,6 +108,14 @@ func TestPrintTx(t *testing.T) {
 	println(tx.String())
 }
 
+func TestA(t *testing.T) {
+	address, _ := hex.DecodeString("8cec4a755be0fac1613df2b549798ca25ea0e37e")
+
+	address = reverseBytes(address)
+
+	println(encodeAddress(address))
+}
+
 func TestNep5RPC(t *testing.T) {
 
 	client := neogo.NewClient(conf.GetString("neotest", "xxxxx"))
@@ -116,7 +124,11 @@ func TestNep5RPC(t *testing.T) {
 
 	assert.NoError(t, err)
 
+	println(key.Address)
+
 	from := ToInvocationAddress(key.Address)
+
+	// from := "8cec4a755be0fac1613df2b549798ca25ea0e37e"
 
 	tokenBalance, err := client.Nep5BalanceOf("849d095d07950b9e56d0c895ec48ec5100cfdff1", from)
 
