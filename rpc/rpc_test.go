@@ -1,4 +1,4 @@
-package neogo
+package rpc
 
 import (
 	"encoding/hex"

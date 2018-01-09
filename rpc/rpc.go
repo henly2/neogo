@@ -1,4 +1,4 @@
-package neogo
+package rpc
 
 import (
 	"bytes"
@@ -171,7 +171,13 @@ func (client *Client) Nep5Decimals(scriptHash string) (uint64, error) {
 		return 0, fmt.Errorf("unexpect result :%v", result)
 	}
 
-	return strconv.ParseUint(result.Stack[0].Value, 10, 64)
+	val, ok := result.Stack[0].Value.(string)
+
+	if !ok {
+		return 0, fmt.Errorf("unexpect result :%v", result.Stack[0].Value)
+	}
+
+	return strconv.ParseUint(val, 10, 64)
 }
 
 // Nep5Symbol .
@@ -187,7 +193,13 @@ func (client *Client) Nep5Symbol(scriptHash string) (string, error) {
 		return "", fmt.Errorf("unexpect result :%v", result)
 	}
 
-	bytes, err := hex.DecodeString(result.Stack[0].Value)
+	val, ok := result.Stack[0].Value.(string)
+
+	if !ok {
+		return "", fmt.Errorf("unexpect result :%v", result.Stack[0].Value)
+	}
+
+	bytes, err := hex.DecodeString(val)
 
 	return string(bytes), err
 }
@@ -213,7 +225,13 @@ func (client *Client) Nep5BalanceOf(scriptHash string, address string) (uint64, 
 		return 0, fmt.Errorf("unexpect result :%v", result)
 	}
 
-	data, err := hex.DecodeString(result.Stack[0].Value)
+	valstr, ok := result.Stack[0].Value.(string)
+
+	if !ok {
+		return 0, fmt.Errorf("unexpect result :%v", result.Stack[0].Value)
+	}
+
+	data, err := hex.DecodeString(valstr)
 
 	if err != nil {
 		return 0, err
@@ -224,6 +242,14 @@ func (client *Client) Nep5BalanceOf(scriptHash string, address string) (uint64, 
 	val := big.NewInt(0)
 
 	return val.SetBytes(data).Uint64(), nil
+}
+
+func reverseBytes(s []byte) []byte {
+	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+		s[i], s[j] = s[j], s[i]
+	}
+
+	return s
 }
 
 // Nep5Transfer .

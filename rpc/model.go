@@ -1,4 +1,4 @@
-package neogo
+package rpc
 
 import (
 	"bytes"
@@ -8,8 +8,8 @@ import (
 
 // Value .
 type Value struct {
-	Type  string `json:"type"`
-	Value string `json:"value"`
+	Type  string      `json:"type"`
+	Value interface{} `json:"value"`
 }
 
 // Nep5Result .

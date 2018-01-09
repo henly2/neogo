@@ -10,9 +10,9 @@ import (
 	"testing"
 
 	"github.com/dynamicgo/config"
-	"github.com/inwecrypto/neogo"
 	"github.com/inwecrypto/neogo/keystore"
 	"github.com/inwecrypto/neogo/nep5"
+	"github.com/inwecrypto/neogo/rpc"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -118,7 +118,7 @@ func TestA(t *testing.T) {
 
 func TestNep5RPC(t *testing.T) {
 
-	client := neogo.NewClient(conf.GetString("neotest", "xxxxx"))
+	client := rpc.NewClient(conf.GetString("neo", "xxxxx"))
 
 	key, err := keystore.KeyFromWIF(conf.GetString("wallet", "xxxxx"))
 
@@ -155,8 +155,8 @@ func TestNep5RPC(t *testing.T) {
 	println(result.Script, result.GasConsumed)
 }
 
-func getAsset(address string, asset string) ([]*neogo.UTXO, error) {
-	client := neogo.NewClient(conf.GetString("neotest", "xxxxx") + "/extend")
+func getAsset(address string, asset string) ([]*rpc.UTXO, error) {
+	client := rpc.NewClient(conf.GetString("neotest", "xxxxx") + "/extend")
 
 	return client.GetBalance(address, asset)
 }
@@ -200,7 +200,7 @@ func TestMintToken(t *testing.T) {
 
 	println(tx.Tx().String())
 
-	client := neogo.NewClient(conf.GetString("neotest", "xxxxx"))
+	client := rpc.NewClient(conf.GetString("neotest", "xxxxx"))
 
 	status, err := client.SendRawTransaction(rawtx)
 
@@ -210,7 +210,7 @@ func TestMintToken(t *testing.T) {
 }
 
 func TestTransfer(t *testing.T) {
-	client := neogo.NewClient(conf.GetString("neotest", "xxxxx"))
+	client := rpc.NewClient(conf.GetString("neotest", "xxxxx"))
 
 	key, err := keystore.KeyFromWIF(conf.GetString("wallet", "xxxxx"))
 
@@ -246,7 +246,7 @@ func TestTransfer(t *testing.T) {
 
 	assert.Equal(t, result.Script, hex.EncodeToString(script))
 
-	client2 := neogo.NewClient(conf.GetString("neotest", "xxxxx") + "/extend")
+	client2 := rpc.NewClient(conf.GetString("neotest", "xxxxx") + "/extend")
 
 	utxos, err := client2.GetBalance(key.Address, GasAssert)
 
@@ -318,7 +318,7 @@ func TestTransferNEO(t *testing.T) {
 
 	println(tx.Tx().String())
 
-	client := neogo.NewClient(conf.GetString("neotest", "xxxxx"))
+	client := rpc.NewClient(conf.GetString("neotest", "xxxxx"))
 
 	status, err := client.SendRawTransaction(rawtx)
 
@@ -329,7 +329,7 @@ func TestTransferNEO(t *testing.T) {
 
 func TestGetClaim(t *testing.T) {
 
-	client := neogo.NewClient(conf.GetString("neotest", "xxxxx") + "/extend")
+	client := rpc.NewClient(conf.GetString("neotest", "xxxxx") + "/extend")
 
 	key, err := keystore.KeyFromWIF(conf.GetString("wallet", "xxxxx"))
 
@@ -357,7 +357,7 @@ func TestGetClaim(t *testing.T) {
 
 	println(tx.Tx().String())
 
-	client = neogo.NewClient(conf.GetString("neotest", "xxxxx"))
+	client = rpc.NewClient(conf.GetString("neotest", "xxxxx"))
 
 	status, err := client.SendRawTransaction(rawtx)
 
