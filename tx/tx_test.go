@@ -9,6 +9,8 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/dynamicgo/config"
 	"github.com/inwecrypto/neogo/keystore"
 	"github.com/inwecrypto/neogo/nep5"
@@ -325,6 +327,13 @@ func TestTransferNEO(t *testing.T) {
 	assert.NoError(t, err)
 
 	println(status)
+}
+
+func TestUTXO(t *testing.T) {
+	utxos, err := getAsset("AG8Tq5z4iiqWhDU7wgmBJjnUTtzfPWV3dZ", NEOAssert)
+	require.NoError(t, err)
+
+	printResult(utxos)
 }
 
 func TestGetClaim(t *testing.T) {

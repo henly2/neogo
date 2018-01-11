@@ -13,7 +13,7 @@ import (
 var cnf *config.Config
 
 func init() {
-	cnf, _ = config.NewFromFile("../conf/test.json")
+	cnf, _ = config.NewFromFile("../../conf/test.json")
 }
 
 func TestRPCAccountSate(t *testing.T) {
@@ -73,7 +73,7 @@ func TestBestBlockHash(t *testing.T) {
 }
 
 func TestBlockCount(t *testing.T) {
-	client := NewClient(cnf.GetString("neo", "xxxxx"))
+	client := NewClient(cnf.GetString("neotest", "xxxxx"))
 
 	count, err := client.GetBlockCount()
 
