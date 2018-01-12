@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/big"
-	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -128,29 +127,29 @@ func TestNep5RPC(t *testing.T) {
 
 	println(key.Address)
 
-	from := ToInvocationAddress(key.Address)
+	from := ToInvocationAddress("AYYiDtPGaxt7rVtEEp9tiw4wgtg8jVEnSP")
 
 	// from := "8cec4a755be0fac1613df2b549798ca25ea0e37e"
 
-	tokenBalance, err := client.Nep5BalanceOf("849d095d07950b9e56d0c895ec48ec5100cfdff1", from)
+	tokenBalance, err := client.Nep5BalanceOf("08e8c4400f1af2c20c28e0018f29535eb85d15b6", from)
 
 	assert.NoError(t, err)
 
 	println(tokenBalance)
 
-	decimals, err := client.Nep5Decimals("849d095d07950b9e56d0c895ec48ec5100cfdff1")
+	decimals, err := client.Nep5Decimals("08e8c4400f1af2c20c28e0018f29535eb85d15b6")
 
 	assert.NoError(t, err)
 
 	println(decimals)
 
-	symbol, err := client.Nep5Symbol("849d095d07950b9e56d0c895ec48ec5100cfdff1")
+	symbol, err := client.Nep5Symbol("08e8c4400f1af2c20c28e0018f29535eb85d15b6")
 
 	assert.NoError(t, err)
 
 	println("symbol: ", symbol)
 
-	result, err := client.Nep5Transfer("849d095d07950b9e56d0c895ec48ec5100cfdff1", from, from, 1)
+	result, err := client.Nep5Transfer("08e8c4400f1af2c20c28e0018f29535eb85d15b6", from, from, 1)
 
 	assert.NoError(t, err)
 
@@ -350,29 +349,29 @@ func TestGetClaim(t *testing.T) {
 
 	printResult(claims)
 
-	val, err := strconv.ParseFloat(claims.Available, 64)
+	// val, err := strconv.ParseFloat(claims.Available, 64)
 
-	assert.NoError(t, err)
+	// assert.NoError(t, err)
 
-	tx := NewClaimTx()
+	// tx := NewClaimTx()
 
-	err = tx.Claim(val, key.Address, claims.Claims)
+	// err = tx.Claim(val, key.Address, claims.Claims)
 
-	assert.NoError(t, err)
+	// assert.NoError(t, err)
 
-	rawtx, _, err := tx.Tx().Sign(key.PrivateKey)
+	// rawtx, _, err := tx.Tx().Sign(key.PrivateKey)
 
-	assert.NoError(t, err)
+	// assert.NoError(t, err)
 
-	println(tx.Tx().String())
+	// println(tx.Tx().String())
 
-	client = rpc.NewClient(conf.GetString("neotest", "xxxxx"))
+	// client = rpc.NewClient(conf.GetString("neotest", "xxxxx"))
 
-	status, err := client.SendRawTransaction(rawtx)
+	// status, err := client.SendRawTransaction(rawtx)
 
-	assert.NoError(t, err)
+	// assert.NoError(t, err)
 
-	println(status)
+	// println(status)
 
 }
 
