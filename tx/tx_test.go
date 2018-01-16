@@ -157,7 +157,7 @@ func TestNep5RPC(t *testing.T) {
 }
 
 func getAsset(address string, asset string) ([]*rpc.UTXO, error) {
-	client := rpc.NewClient(conf.GetString("neotest", "xxxxx") + "/extend")
+	client := rpc.NewClient(conf.GetString("neo", "xxxxx") + "/extend")
 
 	return client.GetBalance(address, asset)
 }
@@ -329,7 +329,7 @@ func TestTransferNEO(t *testing.T) {
 }
 
 func TestUTXO(t *testing.T) {
-	utxos, err := getAsset("AG8Tq5z4iiqWhDU7wgmBJjnUTtzfPWV3dZ", NEOAssert)
+	utxos, err := getAsset("AXXYB4NBu1uDChFmE4vkbCgNrq2tvkxQuK", NEOAssert)
 	require.NoError(t, err)
 
 	printResult(utxos)

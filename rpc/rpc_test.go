@@ -27,9 +27,9 @@ func TestRPCAccountSate(t *testing.T) {
 }
 
 func TestGetBalance(t *testing.T) {
-	client := NewClient(cnf.GetString("testnodeext", "xxxxx"))
+	client := NewClient(cnf.GetString("neo", "xxxxx"))
 
-	balance, err := client.GetBalance("AMpupnF6QweQXLfCtF4dR45FDdKbTXkLsr", "0xc56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b")
+	balance, err := client.GetBalance("AerEgjukZpi6kkx7ER9bg77YuNHaUM6u2q", "0xc56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b")
 
 	assert.NoError(t, err)
 
@@ -73,7 +73,7 @@ func TestBestBlockHash(t *testing.T) {
 }
 
 func TestBlockCount(t *testing.T) {
-	client := NewClient(cnf.GetString("neo", "xxxxx"))
+	client := NewClient(cnf.GetString("orgneo", "xxxxx"))
 
 	count, err := client.GetBlockCount()
 
