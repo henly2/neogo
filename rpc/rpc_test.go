@@ -4,7 +4,10 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"math/big"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 
 	"github.com/dynamicgo/config"
 	"github.com/stretchr/testify/assert"
@@ -34,6 +37,16 @@ func TestGetBalance(t *testing.T) {
 	assert.NoError(t, err)
 
 	printResult(balance)
+}
+
+func TestConvertHex(t *testing.T) {
+	valBytes, err := hex.DecodeString("00e40b5402")
+
+	valBytes = reverseBytes(valBytes)
+
+	require.NoError(t, err)
+
+	fmt.Printf("%d\n", new(big.Int).SetBytes(valBytes))
 }
 
 func TestGetClaim(t *testing.T) {
