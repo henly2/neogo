@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"io"
+	"math/big"
 	"strconv"
 )
 
@@ -13,6 +14,11 @@ type Fixed8 int64
 // MakeFixed8 .
 func MakeFixed8(val float64) Fixed8 {
 	return trunc(val)
+}
+
+// Int convert to big.Int object
+func (fixed8 *Fixed8) Int() *big.Int {
+	return big.NewInt(int64(*fixed8))
 }
 
 func (fixed8 *Fixed8) Write(writer io.Writer) error {
