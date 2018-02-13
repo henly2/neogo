@@ -86,7 +86,7 @@ func TestBestBlockHash(t *testing.T) {
 }
 
 func TestBlockCount(t *testing.T) {
-	client := NewClient(cnf.GetString("neo", "xxxxx"))
+	client := NewClient(cnf.GetString("neotest", "xxxxx"))
 
 	count, err := client.GetBlockCount()
 
