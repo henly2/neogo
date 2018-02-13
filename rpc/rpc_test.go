@@ -50,9 +50,9 @@ func TestConvertHex(t *testing.T) {
 }
 
 func TestGetClaim(t *testing.T) {
-	client := NewClient(cnf.GetString("testnodeext", "xxxxx"))
+	client := NewClient(cnf.GetString("neoexttest", "xxxxx"))
 
-	balance, err := client.GetClaim("AMpupnF6QweQXLfCtF4dR45FDdKbTXkLsr")
+	balance, err := client.GetClaim("Ab8vffxvjaA3JKm3weBg6ChmZMSvorMoBM")
 
 	assert.NoError(t, err)
 
