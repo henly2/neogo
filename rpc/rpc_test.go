@@ -108,9 +108,9 @@ func TestBlockByIndex(t *testing.T) {
 }
 
 func TestGetRawTransaction(t *testing.T) {
-	client := NewClient(cnf.GetString("neo", "xxxxx"))
+	client := NewClient(cnf.GetString("neotest", "xxxxx"))
 
-	block, err := client.GetRawTransaction("0x4e36c4c5f4b02d909fab285f6d5f7242e44dcbd26caee5ce21dd7ec5863146ca")
+	block, err := client.GetRawTransaction("0x975d0777ea574af049d11d2ae6c2e9d5e96dea876eb909341e3e82f9cb1a3c93")
 
 	assert.NoError(t, err)
 
