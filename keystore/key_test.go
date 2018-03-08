@@ -7,9 +7,36 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/dynamicgo/config"
 	"github.com/inwecrypto/bip39"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
+
+var conf *config.Config
+
+func init() {
+	conf, _ = config.NewFromFile("../../conf/test.json")
+}
+
+func TestWIF(t *testing.T) {
+	privateKey, err := DecodeWIF(conf.GetString("wallet", "xxx"))
+
+	require.NoError(t, err)
+
+	wif, err := EncodeWIF(privateKey)
+
+	require.NoError(t, err)
+
+	require.Equal(t, wif, conf.GetString("wallet", "xxx"))
+
+	address, err := PrivateToAddress(privateKey)
+
+	require.NoError(t, err)
+
+	require.Equal(t, address, conf.GetString("walletaddr", "xx"))
+
+}
 
 func publicKeyToBytes(pub *ecdsa.PublicKey) (b []byte) {
 	/* See Certicom SEC1 2.3.3, pg. 10 */

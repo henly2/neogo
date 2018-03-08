@@ -246,6 +246,12 @@ func New(name string) *Script {
 	}
 }
 
+// Reset .
+func (script *Script) Reset() {
+	script.Ops = nil
+	script.Error = nil
+}
+
 // Emit emit one op
 func (script *Script) Emit(opcode OpCode, arg []byte) *Script {
 
@@ -279,6 +285,20 @@ func (script *Script) EmitJump(op OpCode, offset int16) *Script {
 	script.Emit(op, data)
 
 	return script
+}
+
+// EmitAPPCall .
+func (script *Script) EmitAPPCall(scriptHash []byte, tailCall bool) *Script {
+	if len(scriptHash) != 20 {
+		script.Error = fmt.Errorf("[%d] EmitAPPCall scriptHash length must be 20 bytes", len(script.Ops))
+		return script
+	}
+
+	if tailCall {
+		return script.Emit(TAILCALL, scriptHash)
+	}
+
+	return script.Emit(APPCALL, scriptHash)
 }
 
 // EmitPushInteger .
