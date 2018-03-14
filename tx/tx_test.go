@@ -5,6 +5,9 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"math/big"
+	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -128,27 +131,27 @@ func TestNep5RPC(t *testing.T) {
 
 	from := ToInvocationAddress("AYYiDtPGaxt7rVtEEp9tiw4wgtg8jVEnSP")
 
-	// from := "8cec4a755be0fac1613df2b549798ca25ea0e37e"
+	// // from := "8cec4a755be0fac1613df2b549798ca25ea0e37e"
 
-	tokenBalance, err := client.Nep5BalanceOf("08e8c4400f1af2c20c28e0018f29535eb85d15b6", from)
+	// tokenBalance, err := client.Nep5BalanceOf("9beb45a55bbc1880043e6bcd734805a22be8371b", from)
 
-	assert.NoError(t, err)
+	// assert.NoError(t, err)
 
-	println(tokenBalance)
+	// println(tokenBalance)
 
-	decimals, err := client.Nep5Decimals("08e8c4400f1af2c20c28e0018f29535eb85d15b6")
+	// decimals, err := client.Nep5Decimals("9beb45a55bbc1880043e6bcd734805a22be8371b")
 
-	assert.NoError(t, err)
+	// assert.NoError(t, err)
 
-	println(decimals)
+	// println(decimals)
 
-	symbol, err := client.Nep5Symbol("08e8c4400f1af2c20c28e0018f29535eb85d15b6")
+	// symbol, err := client.Nep5Symbol("9beb45a55bbc1880043e6bcd734805a22be8371b")
 
-	assert.NoError(t, err)
+	// assert.NoError(t, err)
 
-	println("symbol: ", symbol)
+	// println("symbol: ", symbol)
 
-	result, err := client.Nep5Transfer("08e8c4400f1af2c20c28e0018f29535eb85d15b6", from, from, 1)
+	result, err := client.Nep5Transfer("ab719b8baa2310f232ee0d277c061704541cfb", from, from, 1)
 
 	assert.NoError(t, err)
 
@@ -210,63 +213,65 @@ func TestMintToken(t *testing.T) {
 }
 
 func TestTransfer(t *testing.T) {
-	client := rpc.NewClient(conf.GetString("neo", "xxxxx"))
+	client := rpc.NewClient(conf.GetString("neotest", "xxxxx"))
 
-	// key, err := keystore.KeyFromWIF(conf.GetString("wallet", "xxxxx"))
+	key, err := keystore.KeyFromWIF(conf.GetString("wallet", "xxxxx"))
 
-	// assert.NoError(t, err)
+	assert.NoError(t, err)
 
-	// key2, err := keystore.KeyFromWIF(conf.GetString("wallet2", "xxxxx"))
+	key2, err := keystore.KeyFromWIF(conf.GetString("wallet2", "xxxxx"))
 
-	// assert.NoError(t, err)
+	assert.NoError(t, err)
 
-	// from := ToInvocationAddress(key.Address)
+	from := ToInvocationAddress(key.Address)
 
-	// to := ToInvocationAddress(key2.Address)
+	to := ToInvocationAddress(key2.Address)
 
-	// result, err := client.Nep5Transfer("849d095d07950b9e56d0c895ec48ec5100cfdff1", from, to, 100000000)
+	result, err := client.Nep5Transfer("849d095d07950b9e56d0c895ec48ec5100cfdff1", from, to, 100000000)
 
-	// assert.NoError(t, err)
+	assert.NoError(t, err)
 
-	// scriptHash, _ := hex.DecodeString("849d095d07950b9e56d0c895ec48ec5100cfdff1")
+	scriptHash, _ := hex.DecodeString("849d095d07950b9e56d0c895ec48ec5100cfdff1")
 
-	// scriptHash = reverseBytes(scriptHash)
+	scriptHash = reverseBytes(scriptHash)
 
-	// println(result.Script, result.GasConsumed, hex.EncodeToString(scriptHash))
+	println(result.Script, result.GasConsumed, hex.EncodeToString(scriptHash))
 
-	// bytesOfFrom, _ := hex.DecodeString(from)
+	bytesOfFrom, _ := hex.DecodeString(from)
 
-	// bytesOfFrom = reverseBytes(bytesOfFrom)
+	bytesOfFrom = reverseBytes(bytesOfFrom)
 
-	// bytesOfTo, _ := hex.DecodeString(to)
+	bytesOfTo, _ := hex.DecodeString(to)
 
-	// bytesOfTo = reverseBytes(bytesOfTo)
+	bytesOfTo = reverseBytes(bytesOfTo)
 
-	// script, err := nep5.Transfer(scriptHash, bytesOfFrom, bytesOfTo, big.NewInt(100000000))
+	script, err := nep5.Transfer(scriptHash, bytesOfFrom, bytesOfTo, big.NewInt(100000000))
 
 	// assert.Equal(t, result.Script, hex.EncodeToString(script))
 
-	// client2 := rpc.NewClient(conf.GetString("neotest", "xxxxx") + "/extend")
+	client2 := rpc.NewClient(conf.GetString("neotest", "xxxxx") + "/extend")
 
-	// utxos, err := client2.GetBalance(key.Address, GasAssert)
+	utxos, err := client2.GetBalance(key.Address, GasAssert)
 
-	// assert.NoError(t, err)
+	assert.NoError(t, err)
 
-	// printResult(utxos)
+	printResult(utxos)
 
-	// tx := NewInvocationTx(script, 0)
+	tx := NewInvocationTx(script, 0)
 
 	// err = tx.CalcInputs(nil, utxos)
 
 	// assert.NoError(t, err)
 
-	// rawtx, _, err := tx.Tx().Sign(key.PrivateKey)
+	tx.CheckFromWitness(bytesOfFrom)
 
-	// assert.NoError(t, err)
+	rawtx, _, err := tx.Tx().Sign(key.PrivateKey)
 
-	// println(tx.Tx().String())
+	assert.NoError(t, err)
 
-	rawtx, _ := hex.DecodeString("80000001413c7fa8473898e38f3df6a28592859b715762a5ee9cc7e3f935c97538f0f71d0000019b7cffdaa674beae0f930ebe6085af9093e5fe56b34a5c220ccdcf6efc336fc500e1f505000000001b37e82ba2054873cd6b3e048018bc5ba545eb9b014140b0bd5aab7cb3b04b989afe97d8f334bc2c8ecf25afa91446a580d6bca259955b21ee923f0272127194a0d00fb400e0fc0e181ef248108673bec9bcdd13dae4452321028c72ef5482e037f4795421df9c7a63fcc0e059e9314d9249e0cbf16570701bc1ac")
+	println(tx.Tx().String())
+
+	// rawtx, _ := hex.DecodeString("80000001413c7fa8473898e38f3df6a28592859b715762a5ee9cc7e3f935c97538f0f71d0000019b7cffdaa674beae0f930ebe6085af9093e5fe56b34a5c220ccdcf6efc336fc500e1f505000000001b37e82ba2054873cd6b3e048018bc5ba545eb9b014140b0bd5aab7cb3b04b989afe97d8f334bc2c8ecf25afa91446a580d6bca259955b21ee923f0272127194a0d00fb400e0fc0e181ef248108673bec9bcdd13dae4452321028c72ef5482e037f4795421df9c7a63fcc0e059e9314d9249e0cbf16570701bc1ac")
 
 	status, err := client.SendRawTransaction(rawtx)
 
@@ -337,12 +342,38 @@ func TestUTXO(t *testing.T) {
 }
 
 func TestGetClaim(t *testing.T) {
+	client := rpc.NewClient(conf.GetString("neo", "xxxxx") + "/extend")
 
-	client := rpc.NewClient(conf.GetString("neotest", "xxxxx") + "/extend")
-
-	key, err := keystore.KeyFromWIF(conf.GetString("wallet", "xxxxx"))
+	claims, err := client.GetClaim("AJFnsA8y2UFwnqcris5KrnAijK2qCMtu7R")
 
 	assert.NoError(t, err)
+
+	printResult(claims)
+}
+
+var key *keystore.Key
+
+func init() {
+	rawdata, err := ioutil.ReadFile("../../conf/lala2.json")
+
+	if err != nil {
+		panic(err)
+	}
+
+	key, err = keystore.ReadKeyStore(rawdata, "Lalala123")
+
+	if err != nil {
+		panic(err)
+	}
+}
+
+func TestDoClaim(t *testing.T) {
+
+	client := rpc.NewClient(conf.GetString("neo", "xxxxx") + "/extend")
+
+	// key, err := keystore.KeyFromWIF(conf.GetString("wallet2", "xxxxx"))
+
+	// assert.NoError(t, err)
 
 	claims, err := client.GetClaim(key.Address)
 
@@ -350,29 +381,29 @@ func TestGetClaim(t *testing.T) {
 
 	printResult(claims)
 
-	// val, err := strconv.ParseFloat(claims.Available, 64)
+	val, err := strconv.ParseFloat(claims.Available, 64)
 
-	// assert.NoError(t, err)
+	assert.NoError(t, err)
 
-	// tx := NewClaimTx()
+	tx := NewClaimTx()
 
-	// err = tx.Claim(val, key.Address, claims.Claims)
+	err = tx.Claim(val, key.Address, claims.Claims)
 
-	// assert.NoError(t, err)
+	assert.NoError(t, err)
 
-	// rawtx, _, err := tx.Tx().Sign(key.PrivateKey)
+	rawtx, _, err := tx.Tx().Sign(key.PrivateKey)
 
-	// assert.NoError(t, err)
+	assert.NoError(t, err)
 
-	// println(tx.Tx().String())
+	println(tx.Tx().String())
 
-	// client = rpc.NewClient(conf.GetString("neotest", "xxxxx"))
+	client = rpc.NewClient(conf.GetString("neo", "xxxxx"))
 
-	// status, err := client.SendRawTransaction(rawtx)
+	status, err := client.SendRawTransaction(rawtx)
 
-	// assert.NoError(t, err)
+	assert.NoError(t, err)
 
-	// println(status)
+	println(status)
 
 }
 

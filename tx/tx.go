@@ -486,7 +486,10 @@ func (attr *Attribute) Write(writer io.Writer) error {
 	}
 
 	if !(attr.Usage <= ECDH03 || attr.Usage == Vote || (attr.Usage <= Hash15 && attr.Usage >= Hash1)) {
-		_, err := writer.Write([]byte{byte(len(attr.Data))})
+
+		length := Varint(len(attr.Data))
+
+		length.Write(writer)
 
 		if err != nil {
 			return err
