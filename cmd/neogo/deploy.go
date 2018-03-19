@@ -1,8 +1,11 @@
 package main
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"path/filepath"
 
+	"github.com/inwecrypto/neogo/tx"
 	cli "gopkg.in/urfave/cli.v2"
 )
 
@@ -34,15 +37,29 @@ func deploy(c *cli.Context) error {
 
 	logger.InfoF("contract root path: %s", rootPath)
 
-	avms, err := filepath.Glob(filepath.Join(rootPath, "*.avm"))
+	configFile := filepath.Join(rootPath, "projec.json")
+
+	data, err := ioutil.ReadFile(configFile)
 
 	if err != nil {
 		return err
 	}
 
-	for _, avm := range avms {
-		logger.Debug(avm)
+	var config *projectConfig
+
+	err = json.Unmarshal(data, &config)
+
+	if err != nil {
+		return err
 	}
+
+	_, err = ioutil.ReadFile(filepath.Join(rootPath, config.Name+".json"))
+
+	if err != nil {
+		return err
+	}
+
+	tx.NewInvocationTx(nil, 0)
 
 	return nil
 }
