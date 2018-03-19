@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"path/filepath"
 
+	"github.com/inwecrypto/neogo/nep5"
 	"github.com/inwecrypto/neogo/tx"
 	cli "gopkg.in/urfave/cli.v2"
 )
@@ -53,13 +54,19 @@ func deploy(c *cli.Context) error {
 		return err
 	}
 
-	_, err = ioutil.ReadFile(filepath.Join(rootPath, config.Name+".json"))
+	script, err := ioutil.ReadFile(filepath.Join(rootPath, config.Name+".json"))
 
 	if err != nil {
 		return err
 	}
 
-	tx.NewInvocationTx(nil, 0)
+	deployData, err := nep5.DeployContract(script, nil)
+
+	if err != nil {
+		return err
+	}
+
+	tx.NewInvocationTx(deployData, 0)
 
 	return nil
 }
