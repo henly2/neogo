@@ -20,6 +20,14 @@ type Nep5Result struct {
 	Stack       []*Value `json:"stack"`
 }
 
+// ApplicationLog .
+type ApplicationLog struct {
+	State       string   `json:"vmstate"`
+	GasConsumed string   `json:"gas_consumed"`
+	Script      string   `json:"script"`
+	Stack       []*Value `json:"stack"`
+}
+
 // Asset .
 type Asset struct {
 	Asset string `json:"asset"`

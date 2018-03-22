@@ -86,7 +86,7 @@ func TestBestBlockHash(t *testing.T) {
 }
 
 func TestBlockCount(t *testing.T) {
-	client := NewClient(cnf.GetString("neo", "xxxxx"))
+	client := NewClient(cnf.GetString("neotest2", "xxxxx"))
 
 	count, err := client.GetBlockCount()
 
@@ -160,4 +160,14 @@ func printResult(result interface{}) {
 	data, _ := json.MarshalIndent(result, "", "\t")
 
 	fmt.Println(string(data))
+}
+
+func TestApplicationLog(t *testing.T) {
+	client := NewClient(cnf.GetString("neotest2", "xxxxx"))
+
+	result, err := client.ApplicationLog("0x42777cae2ab97e4d68b9a51c40d0045d785a69de441a748e81566515974f8b9e")
+
+	assert.NoError(t, err)
+
+	printResult(result)
 }

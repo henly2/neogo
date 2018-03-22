@@ -204,6 +204,16 @@ func (client *Client) Nep5Symbol(scriptHash string) (string, error) {
 	return string(bytes), err
 }
 
+// ApplicationLog get application log
+func (client *Client) ApplicationLog(txid string) (interface{}, error) {
+
+	var result interface{}
+
+	err := client.call("getapplicationlog", &result, txid)
+
+	return result, err
+}
+
 // Nep5BalanceOf get nep5 balance of special address
 func (client *Client) Nep5BalanceOf(scriptHash string, address string) (uint64, error) {
 	var result Nep5Result
