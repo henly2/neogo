@@ -182,9 +182,17 @@ func TestMintToken(t *testing.T) {
 
 	printResult(asset)
 
+	from := ToInvocationAddress(key.Address)
+
+	bytesOfFrom, _ := hex.DecodeString(from)
+
+	bytesOfFrom = reverseBytes(bytesOfFrom)
+
 	script, err := nep5.MintToken(scriptHash)
 
-	tx := NewInvocationTx(script, 0)
+	nonce, _ := time.Now().MarshalBinary()
+
+	tx := NewInvocationTx(script, 0, bytesOfFrom, nonce)
 
 	vout := []*Vout{
 		&Vout{
@@ -262,7 +270,9 @@ func TestTransfer(t *testing.T) {
 
 	printResult(utxos)
 
-	tx := NewInvocationTx(script, 0)
+	nonce, _ := time.Now().MarshalBinary()
+
+	tx := NewInvocationTx(script, 0, bytesOfFrom, nonce)
 
 	err = tx.CalcInputs(nil, utxos)
 
@@ -286,7 +296,7 @@ func TestTransfer(t *testing.T) {
 }
 
 func TestUnmarshalTx(t *testing.T) {
-	tx := NewInvocationTx(nil, 0)
+	tx := NewInvocationTx(nil, 0, []byte{}, []byte{})
 
 	data, err := hex.DecodeString("d1014b51144263d1f1b124778d66d847801fe7cb73dd4bef50144263d1f1b124778d66d847801fe7cb73dd4bef5053c1087472616e7366657267f1dfcf0051ec48ec95c8d0569e0b95075d099d8400000000000000000001b986577bcb2769bc328237d62830015a747a931e7030ac1b8d1f77bc5df8d443010001e72d286979ee6cb1b7e65dfddfb2e384100b8d148e7758de42e4168b71792c60e3c82f21010000004263d1f1b124778d66d847801fe7cb73dd4bef50014140d8197ddab4fe5b46c473b98ff0a925b9e8c77e5e45ca280ac86f56515120a223d6c151be4b93855d6bdfb525b257923c9395d26c4373f7c818c9d8b74c7ef1d023210398b8d209365a197311d1b288424eaea556f6235f5730598dede5647f6a11d99aac")
 

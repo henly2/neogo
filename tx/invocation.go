@@ -1,11 +1,9 @@
 package tx
 
 import (
-	"encoding/binary"
 	"encoding/hex"
 	"fmt"
 	"io"
-	"time"
 
 	"github.com/inwecrypto/neogo/rpc"
 )
@@ -19,8 +17,8 @@ type invocationTx struct {
 }
 
 // NewInvocationTx .
-func NewInvocationTx(script []byte, gas float64) *InvocationTx {
-	return &InvocationTx{
+func NewInvocationTx(script []byte, gas float64, fromScriptHash []byte, nonce []byte) *InvocationTx {
+	tx := &InvocationTx{
 		Type:    InvocationTransaction,
 		Version: 1,
 		Extend: &invocationTx{
@@ -28,6 +26,18 @@ func NewInvocationTx(script []byte, gas float64) *InvocationTx {
 			Gas:    MakeFixed8(gas),
 		},
 	}
+
+	tx.Attributes = append(tx.Attributes, &Attribute{
+		Usage: Script,
+		Data:  fromScriptHash,
+	})
+
+	tx.Attributes = append(tx.Attributes, &Attribute{
+		Usage: Remark15,
+		Data:  nonce,
+	})
+
+	return tx
 }
 
 // JSON .
@@ -38,25 +48,6 @@ func (tx *invocationTx) JSON() string {
 // Tx .
 func (tx *InvocationTx) Tx() *Transaction {
 	return (*Transaction)(tx)
-}
-
-// CheckFromWitness .
-func (tx *InvocationTx) CheckFromWitness(fromScriptHash []byte) {
-	tx.Attributes = append(tx.Attributes, &Attribute{
-		Usage: Script,
-		Data:  fromScriptHash,
-	})
-
-	timestamp := time.Now().UnixNano()
-
-	data := make([]byte, 8)
-
-	binary.BigEndian.PutUint64(data, uint64(timestamp))
-
-	tx.Attributes = append(tx.Attributes, &Attribute{
-		Usage: Remark15,
-		Data:  data,
-	})
 }
 
 // CalcInputs .
@@ -75,30 +66,30 @@ func (tx *InvocationTx) CalcInputs(outputs []*Vout, unspent []*rpc.UTXO) error {
 
 	unspent = unselected
 
-	if invocation.Gas.Float64() < 1 {
-		invocation.Gas = Fixed8(0) // zero gas
-		for _, utxo := range unspent {
-			if utxo.Vout.Asset == GasAssert {
-				val, err := utxo.Value()
-				if err != nil {
-					return err
-				}
+	// if invocation.Gas.Float64() < 1 {
+	// 	invocation.Gas = Fixed8(0) // zero gas
+	// 	for _, utxo := range unspent {
+	// 		if utxo.Vout.Asset == GasAssert {
+	// 			val, err := utxo.Value()
+	// 			if err != nil {
+	// 				return err
+	// 			}
 
-				tx.Outputs = append(tx.Outputs, &Vout{
-					Asset:   GasAssert,
-					Value:   MakeFixed8(val),
-					Address: utxo.Vout.Address,
-				})
+	// 			tx.Outputs = append(tx.Outputs, &Vout{
+	// 				Asset:   GasAssert,
+	// 				Value:   MakeFixed8(val),
+	// 				Address: utxo.Vout.Address,
+	// 			})
 
-				tx.Inputs = append(tx.Inputs, &Vin{
-					Tx: utxo.TransactionID,
-					N:  uint16(utxo.Vout.N),
-				})
+	// 			tx.Inputs = append(tx.Inputs, &Vin{
+	// 				Tx: utxo.TransactionID,
+	// 				N:  uint16(utxo.Vout.N),
+	// 			})
 
-				return nil
-			}
-		}
-	}
+	// 			return nil
+	// 		}
+	// 	}
+	// }
 
 	amount := invocation.Gas.Float64()
 

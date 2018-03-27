@@ -242,6 +242,10 @@ func calcTxInput(amount float64, asset string, unspent []*rpc.UTXO) ([]*rpc.UTXO
 	selected := make([]*rpc.UTXO, 0)
 	vinvalue := float64(0)
 
+	if amount == 0 {
+		return selected, vinvalue, nil
+	}
+
 	for _, utxo := range unspent {
 
 		if utxo.Vout.Asset != asset {
