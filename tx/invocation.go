@@ -1,9 +1,11 @@
 package tx
 
 import (
+	"encoding/binary"
 	"encoding/hex"
 	"fmt"
 	"io"
+	"time"
 
 	"github.com/inwecrypto/neogo/rpc"
 )
@@ -43,6 +45,17 @@ func (tx *InvocationTx) CheckFromWitness(fromScriptHash []byte) {
 	tx.Attributes = append(tx.Attributes, &Attribute{
 		Usage: Script,
 		Data:  fromScriptHash,
+	})
+
+	timestamp := time.Now().UnixNano()
+
+	data := make([]byte, 8)
+
+	binary.BigEndian.PutUint64(data, uint64(timestamp))
+
+	tx.Attributes = append(tx.Attributes, &Attribute{
+		Usage: Remark15,
+		Data:  data,
 	})
 }
 

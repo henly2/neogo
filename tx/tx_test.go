@@ -9,6 +9,7 @@ import (
 	"math/big"
 	"strconv"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
 
@@ -210,6 +211,10 @@ func TestMintToken(t *testing.T) {
 	assert.NoError(t, err)
 
 	println(status)
+}
+
+func TestTimeNow(t *testing.T) {
+	println(time.Now().String())
 }
 
 func TestTransfer(t *testing.T) {
