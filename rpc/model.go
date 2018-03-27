@@ -22,10 +22,28 @@ type Nep5Result struct {
 
 // ApplicationLog .
 type ApplicationLog struct {
-	State       string   `json:"vmstate"`
-	GasConsumed string   `json:"gas_consumed"`
-	Script      string   `json:"script"`
-	Stack       []*Value `json:"stack"`
+	ID            string          `json:"txid"`
+	State         string          `json:"vmstate"`
+	GasConsumed   string          `json:"gas_consumed"`
+	Notifications []*Notification `json:"notifications"`
+}
+
+// Notification .
+type Notification struct {
+	Contract string `json:"contract"`
+	State    State  `json:"state"`
+}
+
+// State .
+type State struct {
+	Type  string      `json:"type"`
+	Value interface{} `json:"value,omitempty"`
+}
+
+// ValueN .
+type ValueN struct {
+	Type  string `json:"type"`
+	Value string `json:"value"`
 }
 
 // Asset .

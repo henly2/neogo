@@ -7,6 +7,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/btcsuite/btcutil/base58"
 	"github.com/dynamicgo/config"
 	"github.com/inwecrypto/bip39"
 	"github.com/stretchr/testify/assert"
@@ -17,6 +18,11 @@ var conf *config.Config
 
 func init() {
 	conf, _ = config.NewFromFile("../../conf/test.json")
+}
+
+func TestAddress(t *testing.T) {
+	fromBytes, _ := hex.DecodeString("2b41aea9d405fef2e809e3c8085221ce944527a7")
+	println(base58.CheckEncode(fromBytes, 0x17))
 }
 
 func TestWIF(t *testing.T) {

@@ -86,7 +86,7 @@ func TestBestBlockHash(t *testing.T) {
 }
 
 func TestBlockCount(t *testing.T) {
-	client := NewClient(cnf.GetString("neotest2", "xxxxx"))
+	client := NewClient(cnf.GetString("neotest", "xxxxx"))
 
 	count, err := client.GetBlockCount()
 
@@ -108,9 +108,9 @@ func TestBlockByIndex(t *testing.T) {
 }
 
 func TestGetRawTransaction(t *testing.T) {
-	client := NewClient(cnf.GetString("neo", "xxxxx"))
+	client := NewClient(cnf.GetString("neotest2", "xxxxx"))
 
-	block, err := client.GetRawTransaction("31cd86882191afa4027365eea02df70acb7a9a9e280e46bf612371411ce20048")
+	block, err := client.GetRawTransaction("0x9a00f762ec56299df07bf38039e06c4722cb66331acc76240e53c2afdf998972")
 
 	assert.NoError(t, err)
 
@@ -165,9 +165,17 @@ func printResult(result interface{}) {
 func TestApplicationLog(t *testing.T) {
 	client := NewClient(cnf.GetString("neotest2", "xxxxx"))
 
-	result, err := client.ApplicationLog("0x42777cae2ab97e4d68b9a51c40d0045d785a69de441a748e81566515974f8b9e")
+	result, err := client.ApplicationLog("0x55f766d1e508e44be3544de2676f74b3655250749cb81461f02c594779f4d596")
 
 	assert.NoError(t, err)
 
 	printResult(result)
+}
+
+func TestConvert(t *testing.T) {
+	data, _ := hex.DecodeString("00ca9a3b00")
+
+	data = reverseBytes(data)
+
+	println(fmt.Sprintf("%d", new(big.Int).SetBytes(data)))
 }

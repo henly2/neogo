@@ -205,9 +205,9 @@ func (client *Client) Nep5Symbol(scriptHash string) (string, error) {
 }
 
 // ApplicationLog get application log
-func (client *Client) ApplicationLog(txid string) (interface{}, error) {
+func (client *Client) ApplicationLog(txid string) (*ApplicationLog, error) {
 
-	var result interface{}
+	var result *ApplicationLog
 
 	err := client.call("getapplicationlog", &result, txid)
 

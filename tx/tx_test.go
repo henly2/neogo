@@ -259,11 +259,11 @@ func TestTransfer(t *testing.T) {
 
 	tx := NewInvocationTx(script, 0)
 
-	// err = tx.CalcInputs(nil, utxos)
+	err = tx.CalcInputs(nil, utxos)
 
-	// assert.NoError(t, err)
+	assert.NoError(t, err)
 
-	tx.CheckFromWitness(bytesOfFrom)
+	// tx.CheckFromWitness(bytesOfFrom)
 
 	rawtx, _, err := tx.Tx().Sign(key.PrivateKey)
 
@@ -412,4 +412,20 @@ func printResult(result interface{}) {
 	data, _ := json.MarshalIndent(result, "", "\t")
 
 	fmt.Println(string(data))
+}
+
+func TestFixed8(t *testing.T) {
+
+	valueBytes, _ := hex.DecodeString("ffd31fd7e800")
+
+	valueBytes = reverseBytes(valueBytes)
+
+	// fixed := Fixed8(new(big.Int).SetBytes(valueBytes).Int64())
+
+	println(hex.EncodeToString(valueBytes))
+
+	fixed := MakeFixed8(10000.41600000)
+
+	println(hex.EncodeToString(fixed.Int().Bytes()))
+
 }
