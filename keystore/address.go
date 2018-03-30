@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/ecdsa"
 	"crypto/elliptic"
+	"encoding/hex"
 	"fmt"
 
 	"github.com/btcsuite/btcutil/base58"
@@ -81,4 +82,35 @@ func PrivateToAddress(privateKey *ecdsa.PrivateKey) (string, error) {
 	}
 
 	return base58.CheckEncode(programhash, 0x17), nil
+}
+
+// AddressToScriptHash  convert address to script hash
+func AddressToScriptHash(address string) (ScriptHash, error) {
+	result, _, err := base58.CheckDecode(address)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result[0:20], nil
+}
+
+// ScriptHashToAddress script hash to address
+func ScriptHashToAddress(scriptHash []byte) string {
+	return base58.CheckEncode(scriptHash, 0x17)
+}
+
+// ScriptHash .
+type ScriptHash []byte
+
+func (hash ScriptHash) String() string {
+	return hex.EncodeToString(reverseBytes([]byte(hash)))
+}
+
+func reverseBytes(s []byte) []byte {
+	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+		s[i], s[j] = s[j], s[i]
+	}
+
+	return s
 }
