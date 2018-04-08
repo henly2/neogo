@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"math/big"
 	"strconv"
 	"testing"
 	"time"
@@ -225,6 +224,10 @@ func TestTimeNow(t *testing.T) {
 	println(time.Now().String())
 }
 
+type Test struct {
+	Data string `json:"data"`
+}
+
 func TestTransfer(t *testing.T) {
 	client := rpc.NewClient(conf.GetString("neotest", "xxxxx"))
 
@@ -258,7 +261,7 @@ func TestTransfer(t *testing.T) {
 
 	bytesOfTo = reverseBytes(bytesOfTo)
 
-	script, err := nep5.Transfer(scriptHash, bytesOfFrom, bytesOfTo, big.NewInt(100000000))
+	// script, err := nep5.Transfer(scriptHash, bytesOfFrom, bytesOfTo, big.NewInt(100000000))
 
 	// assert.Equal(t, result.Script, hex.EncodeToString(script))
 
@@ -268,25 +271,31 @@ func TestTransfer(t *testing.T) {
 
 	assert.NoError(t, err)
 
-	printResult(utxos)
+	data, _ := json.Marshal(utxos)
 
-	nonce, _ := time.Now().MarshalBinary()
+	test := &Test{
+		Data: string(data),
+	}
 
-	tx := NewInvocationTx(script, 0, bytesOfFrom, nonce)
+	printResult(test)
 
-	err = tx.CalcInputs(nil, utxos)
+	// nonce, _ := time.Now().MarshalBinary()
 
-	assert.NoError(t, err)
+	// tx := NewInvocationTx(script, 0, bytesOfFrom, nonce)
 
-	// tx.CheckFromWitness(bytesOfFrom)
+	// err = tx.CalcInputs(nil, utxos)
 
-	rawtx, _, err := tx.Tx().Sign(key.PrivateKey)
+	// assert.NoError(t, err)
 
-	assert.NoError(t, err)
+	// // tx.CheckFromWitness(bytesOfFrom)
 
-	println(tx.Tx().String())
+	// rawtx, _, err := tx.Tx().Sign(key.PrivateKey)
 
-	// rawtx, _ := hex.DecodeString("80000001413c7fa8473898e38f3df6a28592859b715762a5ee9cc7e3f935c97538f0f71d0000019b7cffdaa674beae0f930ebe6085af9093e5fe56b34a5c220ccdcf6efc336fc500e1f505000000001b37e82ba2054873cd6b3e048018bc5ba545eb9b014140b0bd5aab7cb3b04b989afe97d8f334bc2c8ecf25afa91446a580d6bca259955b21ee923f0272127194a0d00fb400e0fc0e181ef248108673bec9bcdd13dae4452321028c72ef5482e037f4795421df9c7a63fcc0e059e9314d9249e0cbf16570701bc1ac")
+	// assert.NoError(t, err)
+
+	// println(tx.Tx().String())
+
+	rawtx, _ := hex.DecodeString("d101500500e1f50500140debf40cabd7c745bb8baa85bdf579ad380bc37e144263d1f1b124778d66d847801fe7cb73dd4bef5053c1087472616e7366657267f1dfcf0051ec48ec95c8d0569e0b95075d099d84000000000000000000011962ffadd11147311d0a85f6489ba2981737b00d95ee72901d3a006d713943d9000001e72d286979ee6cb1b7e65dfddfb2e384100b8d148e7758de42e4168b71792c6011c05548170000004263d1f1b124778d66d847801fe7cb73dd4bef50014140bdc48547b96aaa302cd13a0c968d9395b2c9ae3e0e2d3a01c8c1c23dcca0e01f6e4f23418350d102a53f7baf4f7a55cf96695afe9749e14ad925abeeca25bee323210398b8d209365a197311d1b288424eaea556f6235f5730598dede5647f6a11d99aac")
 
 	status, err := client.SendRawTransaction(rawtx)
 
@@ -298,7 +307,7 @@ func TestTransfer(t *testing.T) {
 func TestUnmarshalTx(t *testing.T) {
 	tx := NewInvocationTx(nil, 0, []byte{}, []byte{})
 
-	data, err := hex.DecodeString("d1014b51144263d1f1b124778d66d847801fe7cb73dd4bef50144263d1f1b124778d66d847801fe7cb73dd4bef5053c1087472616e7366657267f1dfcf0051ec48ec95c8d0569e0b95075d099d8400000000000000000001b986577bcb2769bc328237d62830015a747a931e7030ac1b8d1f77bc5df8d443010001e72d286979ee6cb1b7e65dfddfb2e384100b8d148e7758de42e4168b71792c60e3c82f21010000004263d1f1b124778d66d847801fe7cb73dd4bef50014140d8197ddab4fe5b46c473b98ff0a925b9e8c77e5e45ca280ac86f56515120a223d6c151be4b93855d6bdfb525b257923c9395d26c4373f7c818c9d8b74c7ef1d023210398b8d209365a197311d1b288424eaea556f6235f5730598dede5647f6a11d99aac")
+	data, err := hex.DecodeString("d101500500e1f50500147ee3a05ea28c7949b5f23d61c1fae05b754aec8c144263d1f1b124778d66d847801fe7cb73dd4bef5053c1087472616e7366657267f1dfcf0051ec48ec95c8d0569e0b95075d099d84000000000000000002204263d1f1b124778d66d847801fe7cb73dd4bef50ff0f010000000ed24eb8d32402572601e00000014140d70b2dc42059ed47ee674130533267556ee272e33e003bcdd84783236e4fb3111535352fd9c0a1f586930a43181ea1508c02a08e036a180bdd1125d9e9c5d72e23210398b8d209365a197311d1b288424eaea556f6235f5730598dede5647f6a11d99aac")
 
 	assert.NoError(t, err)
 

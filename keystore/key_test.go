@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"crypto/ecdsa"
 	"encoding/hex"
+	"encoding/json"
+	"fmt"
 	"strings"
 	"testing"
 
@@ -71,6 +73,8 @@ func TestMnemonic(t *testing.T) {
 
 	println(len(privateKeyBytes), len(strings.Split(data, " ")))
 
+	println(string(data))
+
 	data2, err := bip39.MnemonicToByteArray(data, dic)
 
 	data2 = data2[1 : len(data2)-1]
@@ -84,6 +88,29 @@ func TestMnemonic(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, key.Address, key2.Address)
+}
+
+func TestMnemonic2(t *testing.T) {
+	dic, _ := bip39.GetDict("en_US")
+
+	data2, err := bip39.MnemonicToByteArray("increase local decade among nerve brisk eyebrow palm law humble drama wreck mean endorse yard slight fiber entry harsh senior fuel fetch cekery panda", dic)
+
+	require.NoError(t, err)
+
+	// data2 = data2[1 : len(data2)-1]
+
+	data2 = data2[1 : len(data2)-1]
+
+	key2, _ := KeyFromPrivateKey(data2)
+
+	printResult(key2)
+}
+
+func printResult(result interface{}) {
+
+	data, _ := json.MarshalIndent(result, "", "\t")
+
+	fmt.Println(string(data))
 }
 
 func TestNEOAddress(t *testing.T) {
