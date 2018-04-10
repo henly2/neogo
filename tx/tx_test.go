@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"math/big"
 	"strconv"
 	"testing"
 	"time"
@@ -229,7 +230,7 @@ type Test struct {
 }
 
 func TestTransfer(t *testing.T) {
-	client := rpc.NewClient(conf.GetString("neotest", "xxxxx"))
+	client := rpc.NewClient(conf.GetString("neotest2", "xxxxx"))
 
 	key, err := keystore.KeyFromWIF(conf.GetString("wallet", "xxxxx"))
 
@@ -243,15 +244,15 @@ func TestTransfer(t *testing.T) {
 
 	to := ToInvocationAddress(key2.Address)
 
-	result, err := client.Nep5Transfer("849d095d07950b9e56d0c895ec48ec5100cfdff1", from, to, 100000000)
+	// result, err := client.Nep5Transfer("849d095d07950b9e56d0c895ec48ec5100cfdff1", from, to, 100000000)
 
-	assert.NoError(t, err)
+	// assert.NoError(t, err)
 
 	scriptHash, _ := hex.DecodeString("849d095d07950b9e56d0c895ec48ec5100cfdff1")
 
 	scriptHash = reverseBytes(scriptHash)
 
-	println(result.Script, result.GasConsumed, hex.EncodeToString(scriptHash))
+	// println(result.Script, result.GasConsumed, hex.EncodeToString(scriptHash))
 
 	bytesOfFrom, _ := hex.DecodeString(from)
 
@@ -261,41 +262,41 @@ func TestTransfer(t *testing.T) {
 
 	bytesOfTo = reverseBytes(bytesOfTo)
 
-	// script, err := nep5.Transfer(scriptHash, bytesOfFrom, bytesOfTo, big.NewInt(100000000))
+	script, err := nep5.Transfer(scriptHash, bytesOfFrom, bytesOfTo, big.NewInt(100000000))
 
 	// assert.Equal(t, result.Script, hex.EncodeToString(script))
 
-	client2 := rpc.NewClient(conf.GetString("neotest", "xxxxx") + "/extend")
+	// client2 := rpc.NewClient(conf.GetString("neotest", "xxxxx") + "/extend")
 
-	utxos, err := client2.GetBalance(key.Address, GasAssert)
+	// utxos, err := client2.GetBalance(key.Address, GasAssert)
 
 	assert.NoError(t, err)
 
-	data, _ := json.Marshal(utxos)
+	// data, _ := json.Marshal(utxos)
 
-	test := &Test{
-		Data: string(data),
-	}
+	// test := &Test{
+	// 	Data: string(data),
+	// }
 
-	printResult(test)
+	// printResult(test)
 
-	// nonce, _ := time.Now().MarshalBinary()
+	nonce, _ := time.Now().MarshalBinary()
 
-	// tx := NewInvocationTx(script, 0, bytesOfFrom, nonce)
+	tx := NewInvocationTx(script, 0, bytesOfFrom, nonce)
 
 	// err = tx.CalcInputs(nil, utxos)
 
-	// assert.NoError(t, err)
+	assert.NoError(t, err)
 
-	// // tx.CheckFromWitness(bytesOfFrom)
+	// tx.CheckFromWitness(bytesOfFrom)
 
-	// rawtx, _, err := tx.Tx().Sign(key.PrivateKey)
+	rawtx, _, err := tx.Tx().Sign(key.PrivateKey)
 
-	// assert.NoError(t, err)
+	assert.NoError(t, err)
 
-	// println(tx.Tx().String())
+	println(tx.Tx().String())
 
-	rawtx, _ := hex.DecodeString("d101500500e1f50500140debf40cabd7c745bb8baa85bdf579ad380bc37e144263d1f1b124778d66d847801fe7cb73dd4bef5053c1087472616e7366657267f1dfcf0051ec48ec95c8d0569e0b95075d099d84000000000000000000011962ffadd11147311d0a85f6489ba2981737b00d95ee72901d3a006d713943d9000001e72d286979ee6cb1b7e65dfddfb2e384100b8d148e7758de42e4168b71792c6011c05548170000004263d1f1b124778d66d847801fe7cb73dd4bef50014140bdc48547b96aaa302cd13a0c968d9395b2c9ae3e0e2d3a01c8c1c23dcca0e01f6e4f23418350d102a53f7baf4f7a55cf96695afe9749e14ad925abeeca25bee323210398b8d209365a197311d1b288424eaea556f6235f5730598dede5647f6a11d99aac")
+	// rawtx, _ := hex.DecodeString("d101500500e1f50500140debf40cabd7c745bb8baa85bdf579ad380bc37e144263d1f1b124778d66d847801fe7cb73dd4bef5053c1087472616e7366657267f1dfcf0051ec48ec95c8d0569e0b95075d099d84000000000000000000011962ffadd11147311d0a85f6489ba2981737b00d95ee72901d3a006d713943d9000001e72d286979ee6cb1b7e65dfddfb2e384100b8d148e7758de42e4168b71792c6011c05548170000004263d1f1b124778d66d847801fe7cb73dd4bef50014140bdc48547b96aaa302cd13a0c968d9395b2c9ae3e0e2d3a01c8c1c23dcca0e01f6e4f23418350d102a53f7baf4f7a55cf96695afe9749e14ad925abeeca25bee323210398b8d209365a197311d1b288424eaea556f6235f5730598dede5647f6a11d99aac")
 
 	status, err := client.SendRawTransaction(rawtx)
 
