@@ -17,7 +17,8 @@ type claimTx struct {
 // NewClaimTx .
 func NewClaimTx() *ClaimTx {
 	tx := &ClaimTx{
-		Type: ClaimTransaction,
+		Type:   ClaimTransaction,
+		Extend: &claimTx{},
 	}
 
 	return tx
