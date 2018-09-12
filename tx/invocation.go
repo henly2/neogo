@@ -6,6 +6,7 @@ import (
 	"io"
 
 	"github.com/inwecrypto/neogo/rpc"
+	"bytes"
 )
 
 // InvocationTx .
@@ -38,6 +39,25 @@ func NewInvocationTx(script []byte, gas float64, fromScriptHash []byte, nonce []
 	})
 
 	return tx
+}
+
+// NewInvocationTx .
+func BuidInvocationTx(data []byte) (*InvocationTx, error) {
+	tx := &InvocationTx{
+		Type:    InvocationTransaction,
+		Version: 1,
+		Extend: &invocationTx{
+			Script: []byte{},
+			Gas:    MakeFixed8(0),
+		},
+	}
+
+	err := tx.Tx().Read(bytes.NewBuffer(data))
+	if err != nil {
+		return nil, err
+	}
+
+	return tx, nil
 }
 
 // JSON .
